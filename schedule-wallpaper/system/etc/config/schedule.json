@@ -1,0 +1,37 @@
+[
+  {
+    "day": "Monday",
+    "classes": [
+      { "subject": "Mobile", "room": "Patt.I-3C", "time": "10:00-11:45" },
+      { "subject": "Praktikum Mobile", "room": "Lab Mobile", "time": "13:00-15:00" }
+    ]
+  },
+  {
+    "day": "Tuesday",
+    "classes": [
+      { "subject": "Praktikum MPTI", "room": "Lab PPL", "time": "08:00-10:00" },
+      { "subject": "IoT", "room": "Patt.II-1A", "time": "12:30-15:00" }
+    ]
+  },
+  {
+    "day": "Wednesday",
+    "classes": [
+      { "subject": "MPTI", "room": "Patt.II-3A", "time": "10:00-11:45" },
+      { "subject": "DPP", "room": "Patt.I-3A", "time": "12:30-15:00" },
+      { "subject": "EtProf TI", "room": "Patt.III-3A", "time": "15:00-16:45" }
+    ]
+  },
+  {
+    "day": "Thursday",
+    "classes": [
+      { "subject": "MHP (CRM)", "room": "Patt.II-3C", "time": "07:30-09:15" },
+      { "subject": "Audit TI", "room": "Patt.II-3D", "time": "10:00-12:30" },
+      { "subject": "Belneg Wimaya", "room": "Patt.I-1A", "time": "12:30-14:15" },
+      { "subject": "UKPL", "room": "Patt.II-1A", "time": "15:00-16:45" }
+    ]
+  },
+  {
+    "day": "Friday",
+    "classes": []
+  }
+]
