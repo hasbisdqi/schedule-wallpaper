@@ -34,5 +34,6 @@ print_log "Selesai! Wallpaper berhasil diperbarui."
 if [ "$FROM_WEBUI" != "1" ]; then
     print_log ""
     print_log "Membuka UI Module..."
-    am start -a android.intent.action.VIEW -t text/html -d "file://$MODDIR/webroot/index.html" >/dev/null 2>&1
+    # Membuka WebUI secara default (via action trigger)
+    su -c "am start -a android.intent.action.VIEW -d 'file://$MODDIR/webroot/index.html' -t 'text/html'" > /dev/null 2>&1
 fi

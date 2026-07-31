@@ -2,186 +2,640 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule Wallpaper Module</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Schedule Wallpaper Editor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
         :root {
-            --bg-base: #0f172a;
-            --bg-card: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --border: #334155;
+            --bg-primary: #0f111a;
+            --bg-secondary: #1a1d29;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.4);
+            --accent-hover: #4f46e5;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: rgba(255, 255, 255, 0.08);
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
             --success: #10b981;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Outfit', sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-base);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding: 1.5rem;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
         }
 
-        .header {
+        /* Ambient Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 20% 80%, rgba(139, 92, 246, 0.06) 0%, transparent 30%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        header {
+            padding: 2rem 1.5rem 1rem;
             text-align: center;
-            margin-bottom: 2rem;
-            animation: fadeInDown 0.6s ease;
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .icon {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            display: inline-block;
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            position: sticky;
+            top: 0;
+            background: rgba(15, 17, 26, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 10;
+            border-bottom: 1px solid var(--border);
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
+            background: linear-gradient(135deg, #a5b4fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 0.25rem;
         }
 
         .subtitle {
-            color: var(--text-muted);
-            font-size: 0.875rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
         }
 
-        .card {
-            background-color: var(--bg-card);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            padding: 1.25rem;
+        .container {
+            padding: 1.5rem;
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+            padding-bottom: 100px;
+        }
+
+        .env-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
             margin-bottom: 1rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            animation: fadeInUp 0.6s ease;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+        }
+        .env-badge.ksu { background: rgba(16, 185, 129, 0.1); color: var(--success); border-color: rgba(16, 185, 129, 0.2); }
+        .env-badge.magisk { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
+
+        /* Day Selector */
+        .day-tabs {
+            display: flex;
+            overflow-x: auto;
+            gap: 0.5rem;
+            padding-bottom: 1rem;
+            scrollbar-width: none; /* Firefox */
+        }
+        .day-tabs::-webkit-scrollbar { display: none; } /* Chrome */
+
+        .day-tab {
+            padding: 0.6rem 1.2rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        .day-tab:hover { background: rgba(255,255,255,0.05); }
+        .day-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 15px var(--accent-glow);
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Class List */
+        .schedule-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+            min-height: 200px;
         }
 
-        .info-row {
+        .class-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border);
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .class-card:active { transform: scale(0.98); }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .info-row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .info-label {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .info-value {
+        .class-info { flex-grow: 1; }
+        .class-title {
+            font-size: 1.15rem;
             font-weight: 600;
-            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+        .class-meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 1rem;
+        }
+        .class-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
-        .badge {
-            background-color: rgba(16, 185, 129, 0.2);
-            color: var(--success);
-            padding: 0.2rem 0.6rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 600;
+        .class-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-icon {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            width: 40px; height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+        }
+        .btn-icon:hover { background: rgba(255,255,255,0.1); }
+        .btn-icon.delete:hover { background: rgba(239, 68, 68, 0.2); color: var(--danger); border-color: rgba(239, 68, 68, 0.3); }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius-lg);
         }
 
-        .btn {
-            display: block;
-            width: 100%;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 1rem;
+        /* Floating Buttons */
+        .fab-container {
+            position: fixed;
+            bottom: 2rem;
+            left: 0; right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0 1.5rem;
+            pointer-events: none;
+            z-index: 20;
+        }
+        .fab-btn {
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
             font-size: 1rem;
             font-weight: 600;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            text-align: center;
-            margin-top: 1.5rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
+        .fab-btn:active { transform: scale(0.95); }
         
-        .footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-muted);
-            font-size: 0.75rem;
+        .btn-add { background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border); }
+        .btn-save { background: var(--accent); color: white; flex-grow: 1; max-width: 250px; }
+        .btn-save:disabled { background: #333; color: #777; cursor: not-allowed; }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
         }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+
+        .modal-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            padding: 1.5rem;
+            transform: translateY(20px) scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .modal-overlay.active .modal-card { transform: translateY(0) scale(1); }
+
+        .modal-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; }
+        
+        .input-group { margin-bottom: 1rem; }
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+        .input-group input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: white;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .input-group input:focus { border-color: var(--accent); }
+
+        .time-row { display: flex; gap: 1rem; }
+        .time-row .input-group { flex: 1; }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 0.8rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-cancel { background: transparent; color: white; border: 1px solid var(--border); }
+        .btn-confirm { background: var(--accent); color: white; }
+
+        /* Notification */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            color: white;
+            font-weight: 500;
+            z-index: 200;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <div class="icon">📅</div>
-        <h1>Schedule Wallpaper</h1>
-        <div class="subtitle">Dynamic lockscreen wallpaper</div>
-    </div>
+    <header>
+        <div id="envBadge" class="env-badge">Detecting Env...</div>
+        <h1>Schedule Editor</h1>
+        <p class="subtitle">Customize your wallpaper schedule</p>
+    </header>
 
-    <div class="card">
-        <div class="info-row">
-            <span class="info-label">Status</span>
-            <span class="info-value badge">Active</span>
+    <div class="container">
+        <div class="day-tabs" id="dayTabs">
+            <!-- Day tabs injected by JS -->
         </div>
-        <div class="info-row">
-            <span class="info-label">Version</span>
-            <span class="info-value">0.1 (1)</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">Author</span>
-            <span class="info-value">hasbisdqi</span>
-        </div>
-        <div class="info-row">
-            <span class="info-label">Module ID</span>
-            <span class="info-value" style="font-family: monospace; color: var(--text-muted);">schedule-wallpaper</span>
+
+        <div class="schedule-list" id="scheduleList">
+            <!-- Classes injected by JS -->
         </div>
     </div>
 
-    <div class="card" style="animation-delay: 0.1s;">
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Description:</p>
-        <p style="font-size: 0.95rem;">This module automatically updates your device's lockscreen wallpaper to display your daily schedule dynamically.</p>
+    <div class="fab-container">
+        <button class="fab-btn btn-add" onclick="openModal()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+        <button class="fab-btn btn-save" id="btnSave" onclick="saveSchedule()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            Save & Update
+        </button>
     </div>
 
-    <button class="btn" onclick="alert('For configuration, please edit the schedule.json file manually in the module directory.')">
-        Configuration Info
-    </button>
-
-    <div class="footer">
-        Powered by KernelSU / APatch WebUI
+    <!-- Edit/Add Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-card">
+            <div class="modal-title" id="modalTitle">Add Class</div>
+            <input type="hidden" id="editIndex" value="-1">
+            
+            <div class="input-group">
+                <label>Subject</label>
+                <input type="text" id="inpSubject" placeholder="e.g. Mathematics" autocomplete="off">
+            </div>
+            <div class="input-group">
+                <label>Room / Location</label>
+                <input type="text" id="inpRoom" placeholder="e.g. A-101" autocomplete="off">
+            </div>
+            <div class="time-row">
+                <div class="input-group">
+                    <label>Start Time</label>
+                    <input type="time" id="inpStart">
+                </div>
+                <div class="input-group">
+                    <label>End Time</label>
+                    <input type="time" id="inpEnd">
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn btn-confirm" onclick="confirmClass()">Confirm</button>
+            </div>
+        </div>
     </div>
 
+    <div class="toast" id="toast">Message</div>
+
+    <script>
+        const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+        const CONFIG_PATH = "/data/adb/modules/schedule-wallpaper/system/etc/config/schedule.json";
+        const ACTION_SCRIPT = "/data/adb/modules/schedule-wallpaper/action.sh";
+        
+        let scheduleData = [];
+        let activeDayIndex = new Date().getDay() === 0 ? 6 : new Date().getDay() - 1; // 0=Mon, 6=Sun
+        
+        let isKsuEnv = false;
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        async function initEnv() {
+            const badge = document.getElementById('envBadge');
+            
+            if (typeof window.ksu !== 'undefined' || typeof ksu !== 'undefined') {
+                isKsuEnv = true;
+                badge.innerText = "KernelSU Active";
+                badge.className = "env-badge ksu";
+                await loadScheduleKSU();
+            } else {
+                isKsuEnv = false;
+                badge.innerText = "Browser Mode (Magisk)";
+                badge.className = "env-badge magisk";
+                
+                // Fallback mock data for Magisk
+                scheduleData = DAYS.map(d => ({ day: d, classes: [] }));
+                document.getElementById('btnSave').innerText = "Copy JSON";
+                showToast("Read/Write requires KernelSU. Generating JSON for manual copy.");
+                renderUI();
+            }
+        }
+
+        // Exec Root Command (KernelSU)
+        async function runRootCmd(cmd) {
+            return new Promise((resolve) => {
+                try {
+                    // ksu.exec returns stringified JSON: '{"errno": 0, "out": "...", "err": "..."}'
+                    const resStr = window.ksu.exec(cmd);
+                    const res = JSON.parse(resStr);
+                    resolve(res);
+                } catch (e) {
+                    resolve({errno: -1, out: "", err: e.toString()});
+                }
+            });
+        }
+
+        async function loadScheduleKSU() {
+            const res = await runRootCmd(`cat ${CONFIG_PATH}`);
+            if (res.errno === 0 && res.out) {
+                try {
+                    scheduleData = JSON.parse(res.out);
+                    
+                    // Ensure all days exist
+                    const existingDays = scheduleData.map(d => d.day);
+                    DAYS.forEach(d => {
+                        if(!existingDays.includes(d)) scheduleData.push({day: d, classes: []});
+                    });
+                    
+                    // Sort days correctly
+                    scheduleData.sort((a,b) => DAYS.indexOf(a.day) - DAYS.indexOf(b.day));
+                    
+                } catch(e) {
+                    showToast("Failed to parse schedule JSON");
+                }
+            } else {
+                showToast("Creating new schedule...");
+                scheduleData = DAYS.map(d => ({ day: d, classes: [] }));
+            }
+            renderUI();
+        }
+
+        async function saveSchedule() {
+            if (!isKsuEnv) {
+                // Magisk fallback: Copy JSON to clipboard
+                const jsonStr = JSON.stringify(scheduleData, null, 2);
+                navigator.clipboard.writeText(jsonStr);
+                showToast("Copied! Please paste into schedule.json manually.");
+                return;
+            }
+
+            const btnSave = document.getElementById('btnSave');
+            btnSave.disabled = true;
+            btnSave.innerHTML = "Saving...";
+
+            const jsonStr = JSON.stringify(scheduleData);
+            // Escape single quotes for bash
+            const safeJson = jsonStr.replace(/'/g, "'\\''");
+            
+            // Save JSON
+            const saveRes = await runRootCmd(`cat << 'EOF' > ${CONFIG_PATH}\n${jsonStr}\nEOF`);
+            
+            if (saveRes.errno === 0) {
+                showToast("Saved! Applying wallpaper...");
+                // Force Update Wallpaper (executing action.sh directly without opening UI again)
+                await runRootCmd(`FROM_WEBUI=1 sh ${ACTION_SCRIPT}`);
+                showToast("Wallpaper updated!");
+            } else {
+                showToast("Error saving: " + saveRes.err);
+            }
+            
+            btnSave.disabled = false;
+            btnSave.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> Save & Update`;
+        }
+
+        /* UI LOGIC */
+        function renderUI() {
+            renderTabs();
+            renderClasses();
+        }
+
+        function renderTabs() {
+            const tabsDiv = document.getElementById('dayTabs');
+            tabsDiv.innerHTML = '';
+            scheduleData.forEach((dayData, idx) => {
+                const tab = document.createElement('div');
+                tab.className = `day-tab ${idx === activeDayIndex ? 'active' : ''}`;
+                // Shorten day name on mobile (e.g. Monday -> Mon)
+                tab.innerText = window.innerWidth < 400 ? dayData.day.substring(0,3) : dayData.day;
+                tab.onclick = () => {
+                    activeDayIndex = idx;
+                    renderUI();
+                };
+                tabsDiv.appendChild(tab);
+            });
+            // Auto scroll to active tab
+            setTimeout(() => {
+                const activeTab = tabsDiv.querySelector('.active');
+                if(activeTab) activeTab.scrollIntoView({behavior: 'smooth', inline: 'center', block: 'nearest'});
+            }, 100);
+        }
+
+        function renderClasses() {
+            const listDiv = document.getElementById('scheduleList');
+            listDiv.innerHTML = '';
+            
+            const currentDay = scheduleData[activeDayIndex];
+            
+            if (!currentDay || !currentDay.classes || currentDay.classes.length === 0) {
+                listDiv.innerHTML = `<div class="empty-state">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏖️</div>
+                    <div>No classes scheduled</div>
+                </div>`;
+                return;
+            }
+
+            // Sort classes by time
+            currentDay.classes.sort((a,b) => {
+                const timeA = parseInt(a.time.replace(':',''));
+                const timeB = parseInt(b.time.replace(':',''));
+                return timeA - timeB;
+            });
+
+            currentDay.classes.forEach((cls, idx) => {
+                const card = document.createElement('div');
+                card.className = 'class-card';
+                card.innerHTML = `
+                    <div class="class-info">
+                        <div class="class-title">${cls.subject}</div>
+                        <div class="class-meta">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> ${cls.time}</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ${cls.room}</span>
+                        </div>
+                    </div>
+                    <div class="class-actions">
+                        <div class="btn-icon" onclick="openModal(${idx})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        </div>
+                        <div class="btn-icon delete" onclick="deleteClass(${idx})">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        </div>
+                    </div>
+                `;
+                listDiv.appendChild(card);
+            });
+        }
+
+        function deleteClass(idx) {
+            if(confirm("Delete this class?")) {
+                scheduleData[activeDayIndex].classes.splice(idx, 1);
+                renderClasses();
+            }
+        }
+
+        /* Modal Logic */
+        const modal = document.getElementById('editModal');
+        
+        function openModal(idx = -1) {
+            const title = document.getElementById('modalTitle');
+            const editIndex = document.getElementById('editIndex');
+            
+            if (idx === -1) {
+                title.innerText = "Add Class (" + scheduleData[activeDayIndex].day + ")";
+                document.getElementById('inpSubject').value = "";
+                document.getElementById('inpRoom').value = "";
+                document.getElementById('inpStart').value = "08:00";
+                document.getElementById('inpEnd').value = "10:00";
+            } else {
+                title.innerText = "Edit Class";
+                const cls = scheduleData[activeDayIndex].classes[idx];
+                document.getElementById('inpSubject').value = cls.subject;
+                document.getElementById('inpRoom').value = cls.room;
+                
+                const timeParts = cls.time.split(/[-–]/);
+                document.getElementById('inpStart').value = timeParts[0].trim();
+                document.getElementById('inpEnd').value = timeParts.length > 1 ? timeParts[1].trim() : "";
+            }
+            
+            editIndex.value = idx;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        function confirmClass() {
+            const subject = document.getElementById('inpSubject').value.trim();
+            const room = document.getElementById('inpRoom').value.trim();
+            const start = document.getElementById('inpStart').value;
+            const end = document.getElementById('inpEnd').value;
+            
+            if (!subject || !start) {
+                showToast("Subject and Start Time are required");
+                return;
+            }
+
+            const timeStr = end ? `${start}-${end}` : start;
+            const newClass = { subject, room, time: timeStr };
+            
+            const idx = parseInt(document.getElementById('editIndex').value);
+            
+            if (idx === -1) {
+                scheduleData[activeDayIndex].classes.push(newClass);
+            } else {
+                scheduleData[activeDayIndex].classes[idx] = newClass;
+            }
+            
+            closeModal();
+            renderClasses();
+        }
+
+        // INIT
+        document.addEventListener("DOMContentLoaded", initEnv);
+
+    </script>
 </body>
 </html>

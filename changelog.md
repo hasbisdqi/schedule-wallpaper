@@ -1,3 +1,15 @@
+# 0.2.0
+
+- Penambahan Web UI Dashboard Interaktif untuk mengatur jadwal (CRUD) secara langsung
+- Dukungan deteksi KernelSU API untuk sinkronisasi simpan jadwal secara instan dan update wallpaper otomatis
+- Desain UI baru (Dark mode, Glassmorphism, Responsive)
+
+---
+
+- Added Interactive Web UI Dashboard for direct schedule management (CRUD)
+- Added KernelSU API detection for instant schedule sync and auto wallpaper update
+- New UI design (Dark mode, Glassmorphism, Responsive)
+
 # 0.1.2
 
 - Memperbaiki kegagalan memuat gambar akibat Scoped Storage di Android 13/14+ dengan mengeksekusi Java menggunakan UID 1000 (System)
