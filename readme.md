@@ -27,13 +27,3 @@ Anda perlu menyesuaikan jadwal bawaan dengan jadwal asli Anda sendiri. Konfigura
    *(Gunakan format penulisan waktu HH:MM-HH:MM, contoh: "08:00-10:00")*
 4. Simpan file tersebut.
 5. Buka Magisk/KernelSU lalu tekan tombol **Action** pada modul ini untuk menerapkan jadwal baru Anda secara instan.
-
-## 📝 Changelog
-
-### v0.1.1
-- **Fix:** Memperbaiki masalah *crash* saat memasang wallpaper (`Invalid package or package does not belong to uid:0`) pada sistem Android 13/14+ dengan menjalankan `app_process` menggunakan UID 2000 (Shell).
-- **Feature:** Menambahkan WebUI untuk KernelSU / APatch.
-- **Feature:** Memfungsikan tombol *Action* (Magisk) sebagai pembaruan manual instan (*Force Refresh*).
-
-### v0.1.0
-- Rilis perdana modul Schedule Wallpaper.
