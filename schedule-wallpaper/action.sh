@@ -22,7 +22,7 @@ print_log "[-] Menyalin gambar ke /sdcard/Pictures..."
 cp "jadwal_kuliah.png" "/sdcard/Pictures/jadwal_kuliah.png"
 
 print_log "[-] Menerapkan wallpaper baru..."
-app_process -cp "$MODDIR/system/bin/SetWallpaper.jar" /system/bin SetWallpaper "/sdcard/Pictures/jadwal_kuliah.png" 2>&1 | while read -r line; do print_log "    $line"; done
+su 2000 -c "app_process -cp \"$MODDIR/system/bin/SetWallpaper.jar\" /system/bin SetWallpaper \"/sdcard/Pictures/jadwal_kuliah.png\"" 2>&1 | while read -r line; do print_log "    $line"; done
 
 print_log ""
 print_log "Selesai! Wallpaper berhasil diperbarui."
