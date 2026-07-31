@@ -4,3 +4,4 @@ version=0.1
 versionCode=1
 author=hasbisdqi
 description=Dynamic lockscreen wallpaper
+updateJson=https://raw.githubusercontent.com/hasbisdqi/schedule-wallpaper/refs/heads/main/update.json

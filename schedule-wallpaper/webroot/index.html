@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Wallpaper Module</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        :root {
+            --bg-base: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #334155;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 1.5rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .badge {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="icon">📅</div>
+        <h1>Schedule Wallpaper</h1>
+        <div class="subtitle">Dynamic lockscreen wallpaper</div>
+    </div>
+
+    <div class="card">
+        <div class="info-row">
+            <span class="info-label">Status</span>
+            <span class="info-value badge">Active</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Version</span>
+            <span class="info-value">0.1 (1)</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Author</span>
+            <span class="info-value">hasbisdqi</span>
+        </div>
+        <div class="info-row">
+            <span class="info-label">Module ID</span>
+            <span class="info-value" style="font-family: monospace; color: var(--text-muted);">schedule-wallpaper</span>
+        </div>
+    </div>
+
+    <div class="card" style="animation-delay: 0.1s;">
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">Description:</p>
+        <p style="font-size: 0.95rem;">This module automatically updates your device's lockscreen wallpaper to display your daily schedule dynamically.</p>
+    </div>
+
+    <button class="btn" onclick="alert('For configuration, please edit the schedule.json file manually in the module directory.')">
+        Configuration Info
+    </button>
+
+    <div class="footer">
+        Powered by KernelSU / APatch WebUI
+    </div>
+
+</body>
+</html>
