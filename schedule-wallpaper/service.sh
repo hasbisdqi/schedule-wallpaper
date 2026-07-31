@@ -9,7 +9,7 @@ until [ "$(getprop sys.boot_completed)" = "1" ]; do
 done
 
 # Pindah ke folder tempat 'config' dan 'assets' berada
-cd "$MODDIR/system/etc/schedule-wallpaper/"
+cd "$MODDIR/system/etc/"
 
 # Buat log file
 echo "=== JADWAL KULIAH LOG ===" > /sdcard/jadwal_log.txt
