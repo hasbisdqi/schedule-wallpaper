@@ -26,7 +26,8 @@ public class SetWallpaper {
             Method getSystemContextMethod = activityThreadClass.getDeclaredMethod("getSystemContext");
             Context systemContext = (Context) getSystemContextMethod.invoke(activityThread);
 
-            // 3. Setelah memiliki Context, panggil WallpaperManager seperti biasa
+            // 3. Panggil WallpaperManager dengan systemContext bawaan
+            // systemContext menggunakan package "android" yang cocok dengan UID 1000 (System)
             WallpaperManager wallpaperManager = WallpaperManager.getInstance(systemContext);
             
             // 4. Membaca gambar dari argumen skrip

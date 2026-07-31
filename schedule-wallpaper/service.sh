@@ -25,8 +25,12 @@ while true; do
     cp "jadwal_kuliah.png" "/sdcard/Pictures/jadwal_kuliah.png" >> /sdcard/jadwal_log.txt 2>&1
     
     # Eksekusi Java class SetWallpaper menggunakan app_process dengan UID 2000 (Shell)
-    # Ini untuk menghindari error "Invalid package or package does not belong to uid:0" di OS baru
-    su 2000 -c "app_process -cp \"$MODDIR/system/bin/SetWallpaper.jar\" /system/bin SetWallpaper \"/sdcard/Pictures/jadwal_kuliah.png\"" >> /sdcard/jadwal_log.txt 2>&1
+    # File jar dicopy ke /data/local/tmp agar bisa diakses oleh UID 2000 (menghindari Aborted)
+    cp "$MODDIR/system/bin/SetWallpaper.jar" /data/local/tmp/SetWallpaper.jar
+    cp "jadwal_kuliah.png" /data/local/tmp/jadwal_kuliah.png
+    chmod 777 /data/local/tmp/SetWallpaper.jar /data/local/tmp/jadwal_kuliah.png
+    su 1000 -c "app_process -cp /data/local/tmp/SetWallpaper.jar /system/bin SetWallpaper /data/local/tmp/jadwal_kuliah.png" >> /sdcard/jadwal_log.txt 2>&1
+    rm /data/local/tmp/SetWallpaper.jar /data/local/tmp/jadwal_kuliah.png
     
     echo "[$(date)] Selesai." >> /sdcard/jadwal_log.txt
     echo "--------------------------------" >> /sdcard/jadwal_log.txt

@@ -13,7 +13,7 @@ print_log "========================================="
 print_log ""
 
 # Pindah ke direktori config
-cd "$MODDIR/system/etc/schedule-wallpaper/"
+cd "$MODDIR/system/etc/"
 
 print_log "[-] Mengeksekusi modul generator jadwal..."
 "$MODDIR/system/bin/schedule-wallpaper" 2>&1 | while read -r line; do print_log "    $line"; done
@@ -22,7 +22,11 @@ print_log "[-] Menyalin gambar ke /sdcard/Pictures..."
 cp "jadwal_kuliah.png" "/sdcard/Pictures/jadwal_kuliah.png"
 
 print_log "[-] Menerapkan wallpaper baru..."
-su 2000 -c "app_process -cp \"$MODDIR/system/bin/SetWallpaper.jar\" /system/bin SetWallpaper \"/sdcard/Pictures/jadwal_kuliah.png\"" 2>&1 | while read -r line; do print_log "    $line"; done
+cp "$MODDIR/system/bin/SetWallpaper.jar" /data/local/tmp/SetWallpaper.jar
+cp "jadwal_kuliah.png" /data/local/tmp/jadwal_kuliah.png
+chmod 777 /data/local/tmp/SetWallpaper.jar /data/local/tmp/jadwal_kuliah.png
+su 1000 -c "app_process -cp /data/local/tmp/SetWallpaper.jar /system/bin SetWallpaper /data/local/tmp/jadwal_kuliah.png" 2>&1 | while read -r line; do print_log "    $line"; done
+rm /data/local/tmp/SetWallpaper.jar /data/local/tmp/jadwal_kuliah.png
 
 print_log ""
 print_log "Selesai! Wallpaper berhasil diperbarui."
