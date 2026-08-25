@@ -33,7 +33,6 @@ fn parse_time_to_minutes(time_str: &str) -> u32 {
 
 // Fungsi untuk mengecek apakah waktu sekarang berada di dalam rentang jam kuliah
 fn is_current_class(time_range: &str, current_minutes: u32) -> bool {
-    // Memisahkan rentang waktu berdasarkan strip (mendukung hyphen biasa '-' atau en-dash '–')
     let parts: Vec<&str> = time_range.split(|c| c == '-' || c == '–').collect();
     if parts.len() == 2 {
         let start = parse_time_to_minutes(parts[0].trim());
@@ -60,7 +59,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Palet Warna
     let color_white = Rgba([255, 255, 255, 255]);
-    let color_dim = Rgba([120, 120, 120, 255]); // Abu-abu untuk badge hari lain
+    let color_dim = Rgba([120, 120, 120, 255]); // Abu-abu untuk jadwal hari lain
     let color_highlight = Rgba([255, 204, 0, 255]); // Kuning terang untuk kelas yang sedang berlangsung
 
     let mut components = Vec::new();
@@ -71,95 +70,78 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let current_minutes = now.hour() * 60 + now.minute();
 
     // Judul "PROGRAM"
-    components.push(Components::Text(150, 800, 75, "PROGRAM", color_white, None));
+    components.push(Components::Text(150, 450, 75, "PROGRAM", color_white, None));
 
-    let mut current_y = 950;
+    let mut current_y = 600;
 
     for daily in schedule {
         let day_upper = daily.day.to_uppercase();
         let day_str: &'static str = Box::leak(day_upper.into_boxed_str());
 
-        // Cek apakah hari pada loop ini adalah hari ini
-        if daily.day.eq_ignore_ascii_case(&current_day) {
-            // == RENDER JADWAL HARI INI SECARA PENUH ==
+        let is_today = daily.day.eq_ignore_ascii_case(&current_day);
+        let header_color = if is_today { color_white } else { color_dim };
 
-            // Nama Hari (kiri)
+        // Nama Hari
+        components.push(Components::Text(
+            150,
+            current_y,
+            42,
+            day_str,
+            header_color,
+            None,
+        ));
+        current_y += 55;
+
+        if daily.classes.is_empty() {
+            let free_color = if is_today { color_white } else { color_dim };
             components.push(Components::Text(
-                150,
+                220,
                 current_y,
-                45,
-                day_str,
-                color_white,
+                26,
+                "N O   C L A S S E S",
+                free_color,
                 None,
             ));
-            current_y += 60;
+            current_y += 55;
+        } else {
+            for class in daily.classes {
+                let subject_str: &'static str = Box::leak(class.subject.into_boxed_str());
+                let room_str: &'static str = Box::leak(class.room.into_boxed_str());
+                let time_str: &'static str = Box::leak(class.time.into_boxed_str());
 
-            if daily.classes.is_empty() {
-                components.push(Components::Text(
-                    350,
-                    current_y,
-                    25,
-                    "N O   C L A S S E S   T O D A Y",
-                    color_white,
-                    None,
-                ));
-                current_y += 90;
-            } else {
-                for class in daily.classes {
-                    let subject_str: &'static str = Box::leak(class.subject.into_boxed_str());
-                    let room_str: &'static str = Box::leak(class.room.into_boxed_str());
-                    let time_str: &'static str = Box::leak(class.time.into_boxed_str());
-
-                    // Gunakan `time_str` karena ia sudah berwujud &str yang valid,
-                    // sedangkan `class.time` sudah tidak bisa dipakai lagi.
-                    let text_color = if is_current_class(time_str, current_minutes) {
+                let text_color = if is_today {
+                    if is_current_class(time_str, current_minutes) {
                         color_highlight
                     } else {
                         color_white
-                    };
+                    }
+                } else {
+                    color_dim
+                };
 
-                    // Kolom 1: Mata Kuliah
-                    components.push(Components::Text(
-                        220,
-                        current_y,
-                        35,
-                        subject_str,
-                        text_color,
-                        None,
-                    ));
+                // Kolom 1: Mata Kuliah
+                components.push(Components::Text(
+                    220,
+                    current_y,
+                    32,
+                    subject_str,
+                    text_color,
+                    None,
+                ));
 
-                    // Kolom 2: Ruangan
-                    components.push(Components::Text(
-                        550, current_y, 35, room_str, text_color, None,
-                    ));
+                // Kolom 2: Ruangan
+                components.push(Components::Text(
+                    560, current_y, 32, room_str, text_color, None,
+                ));
 
-                    // Kolom 3: Waktu
-                    components.push(Components::Text(
-                        840, current_y, 35, time_str, text_color, None,
-                    ));
+                // Kolom 3: Waktu
+                components.push(Components::Text(
+                    840, current_y, 32, time_str, text_color, None,
+                ));
 
-                    current_y += 45;
-                }
-                current_y += 60; // Jarak antar hari
+                current_y += 42;
             }
-        } else {
-            // == RENDER HARI LAIN SEBAGAI BADGE (REKAPAN) ==
-            let class_count = daily.classes.len();
-
-            let badge_text = if class_count == 0 {
-                format!("{} - FREE", day_str)
-            } else {
-                format!("{} - {} CLASSES", day_str, class_count)
-            };
-
-            let badge_str: &'static str = Box::leak(badge_text.into_boxed_str());
-
-            // Kita tampilkan sedikit lebih kecil dan warnanya redup (abu-abu)
-            components.push(Components::Text(
-                150, current_y, 30, badge_str, color_dim, None,
-            ));
-
-            current_y += 50;
+            current_y += 25; // Jarak antar hari
         }
     }
 
