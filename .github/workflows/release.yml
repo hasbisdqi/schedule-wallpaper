@@ -1,0 +1,43 @@
+name: Build and Release Schedule Wallpaper
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android
+
+      - name: Install cross-compilation tool
+        run: cargo install cross --git https://github.com/cross-rs/cross
+
+      - name: Build Android ARM64 binary
+        run: cross build --target aarch64-linux-android --release
+
+      - name: Prepare Magisk / KernelSU Module
+        run: |
+          cp target/aarch64-linux-android/release/schedule-wallpaper schedule-wallpaper/system/bin/schedule-wallpaper
+          chmod +x schedule-wallpaper/system/bin/schedule-wallpaper
+          cd schedule-wallpaper
+          zip -r ../Schedule-Wallpaper-${{ github.ref_name }}.zip ./*
+          cd ..
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Schedule Wallpaper ${{ github.ref_name }}
+          body_path: changelog.md
+          files: Schedule-Wallpaper-${{ github.ref_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

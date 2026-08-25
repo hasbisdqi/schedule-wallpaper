@@ -1,3 +1,15 @@
+# 0.2.1
+
+- Menampilkan seluruh jadwal dari Senin hingga Jumat secara penuh (tidak collapsible)
+- Jadwal selain hari ini dirender dengan warna abu-abu redup (dim gray) agar tetap terbaca rapi
+- Highlight terang tetap aktif pada hari ini dan mata kuliah yang sedang berlangsung
+
+---
+
+- Full rendering of weekly schedule (non-collapsible)
+- Non-active days rendered in subtle dim gray
+- Bright highlight for active day and current class
+
 # 0.2.0
 
 - Penambahan Web UI Dashboard Interaktif untuk mengatur jadwal (CRUD) secara langsung
