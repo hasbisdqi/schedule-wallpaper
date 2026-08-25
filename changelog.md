@@ -1,3 +1,13 @@
+# 0.2.3
+
+- Menaikkan posisi vertikal sedikit ke atas (sweet spot)
+- Posisi judul PROGRAM di Y: 680 dan jadwal dimulai dari Y: 820
+
+---
+
+- Fine-tuned vertical offset slightly upward (sweet spot)
+- Header PROGRAM at Y: 680, schedule items start at Y: 820
+
 # 0.2.2
 
 - Menurunkan posisi vertikal (Y offset) jadwal lebih jauh ke bawah agar tidak bertabrakan dengan jam/widget lockscreen

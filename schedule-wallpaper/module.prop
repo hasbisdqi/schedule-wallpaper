@@ -1,7 +1,7 @@
 id=schedule-wallpaper
 name=Schedule Wallpaper
-version=0.2.2
-versionCode=6
+version=0.2.3
+versionCode=7
 author=hasbisdqi
 description=Dynamic lockscreen wallpaper
 updateJson=https://raw.githubusercontent.com/hasbisdqi/schedule-wallpaper/refs/heads/main/update.json
