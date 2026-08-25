@@ -1,3 +1,11 @@
+# 0.2.4
+
+- Menurunkan posisi vertikal 10px (PROGRAM di Y: 690, jadwal di Y: 830)
+
+---
+
+- Lowered vertical offset by 10px (PROGRAM at Y: 690, schedule at Y: 830)
+
 # 0.2.3
 
 - Menaikkan posisi vertikal sedikit ke atas (sweet spot)

@@ -69,10 +69,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let current_day = now.format("%A").to_string(); // Contoh: "Monday"
     let current_minutes = now.hour() * 60 + now.minute();
 
-    // Judul "PROGRAM" dinaikkan sedikit ke Y: 680
-    components.push(Components::Text(150, 680, 75, "PROGRAM", color_white, None));
+    // Judul "PROGRAM" diturunkan 10px ke Y: 690
+    components.push(Components::Text(150, 690, 75, "PROGRAM", color_white, None));
 
-    let mut current_y = 820;
+    // Jadwal diturunkan 10px ke Y: 830
+    let mut current_y = 830;
 
     for daily in schedule {
         let day_upper = daily.day.to_uppercase();
