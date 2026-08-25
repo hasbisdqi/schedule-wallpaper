@@ -1,3 +1,13 @@
+# 0.2.2
+
+- Menurunkan posisi vertikal (Y offset) jadwal lebih jauh ke bawah agar tidak bertabrakan dengan jam/widget lockscreen
+- Posisi judul PROGRAM diturunkan ke Y: 850 dan jadwal dimulai dari Y: 1000
+
+---
+
+- Adjusted vertical offset downward to avoid clock/widget overlaps on lockscreen
+- Header PROGRAM moved to Y: 850, schedule items start at Y: 1000
+
 # 0.2.1
 
 - Menampilkan seluruh jadwal dari Senin hingga Jumat secara penuh (tidak collapsible)
