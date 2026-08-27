@@ -1,3 +1,10 @@
+# 0.3.2
+
+- Impeccable Design Upgrade: Tampilan UI studio dirombak total dengan palet gelap modern, glassmorphism, dan Plus Jakarta Sans
+- Fix Karakter Kotak/Tofu: Stiker emoji kini menggunakan font stack sistem natif (Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji)
+- Direct KernelSU Apply: Tombol "⚡ Simpan & Terapkan" otomatis mendeteksi KernelSU API untuk menulis config dan langsung trigger action update wallpaper
+- Perbaikan Pengaturan Warna & Theme: Sinkronisasi color picker, hex badge, dan preview live tanpa reload
+
 # 0.3.1
 
 - Fix Web UI Responsiveness: Layout flex responsif untuk mobile dan tablet

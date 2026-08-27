@@ -24,7 +24,7 @@ fn default_sticker_type() -> String {
     "emoji".to_string()
 }
 fn default_sticker_size() -> u32 {
-    60
+    64
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -233,21 +233,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
-    // Stickers Layer (Render text/emoji stickers)
-    for stk in settings.stickers {
-        if stk.r#type == "emoji" || stk.r#type == "text" {
-            let sticker_str: &'static str = Box::leak(stk.content.into_boxed_str());
-            components.push(Components::Text(
-                stk.x,
-                stk.y,
-                stk.size,
-                sticker_str,
-                color_today,
-                None,
-            ));
-        }
-    }
-
     let component_refs: Vec<_> = components.iter().collect();
 
     image
@@ -256,6 +241,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .add_components(component_refs)
         .draw()?;
 
-    println!("Gambar jadwal_kuliah.png berhasil di-render dari skema baru!");
+    println!("Gambar jadwal_kuliah.png berhasil di-render!");
     Ok(())
 }
