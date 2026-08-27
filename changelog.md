@@ -1,3 +1,21 @@
+# 0.3.0
+
+- Menghapus teks judul "PROGRAM" agar tampilan wallpaper lebih bersih dan minimalis
+- Menambahkan Web UI Studio interaktif dengan Phone Mockup Canvas Preview
+- Pengaturan wallpaper lengkap disimpan dalam format JSON (`settings` & `schedule`)
+- Kustomisasi background wallpaper: pilihan warna solid (tanpa wallpaper) atau gambar custom (URL/file)
+- Color picker dinamis untuk teks aktif (highlight kelas saat ini), hari ini, dan hari lain
+- Dukungan dekorasi stiker dan badge elemen (emoji & custom elements)
+
+---
+
+- Removed "PROGRAM" header text for a cleaner, minimalist aesthetic
+- Added interactive Web UI Studio with full live Phone Mockup Canvas Preview
+- Complete wallpaper configurations stored directly in structured JSON (`settings` & `schedule`)
+- Background customization: solid color mode (wallpaper-free) or custom image backgrounds
+- Dynamic color pickers for active class highlight, today's schedule, and dimmed days
+- Added support for sticker decorations and badge elements
+
 # 0.2.4
 
 - Menurunkan posisi vertikal 10px (PROGRAM di Y: 690, jadwal di Y: 830)
