@@ -4,23 +4,108 @@ use omage::{Components, Config, Image, Rgba};
 use serde::Deserialize;
 use std::fs;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone, Default)]
+struct StickerConfig {
+    #[serde(default)]
+    id: String,
+    #[serde(default = "default_sticker_type")]
+    r#type: String,
+    #[serde(default)]
+    content: String,
+    #[serde(default)]
+    x: u32,
+    #[serde(default)]
+    y: u32,
+    #[serde(default = "default_sticker_size")]
+    size: u32,
+}
+
+fn default_sticker_type() -> String {
+    "emoji".to_string()
+}
+fn default_sticker_size() -> u32 {
+    60
+}
+
+#[derive(Deserialize, Debug, Clone)]
+struct WallpaperSettings {
+    #[serde(default = "default_bg_type")]
+    background_type: String,
+    #[serde(default = "default_bg_color")]
+    background_color: String,
+    #[serde(default)]
+    background_image: String,
+    #[serde(default = "default_color_active")]
+    color_active: String,
+    #[serde(default = "default_color_today")]
+    color_today: String,
+    #[serde(default = "default_color_dim")]
+    color_dim: String,
+    #[serde(default = "default_start_y")]
+    start_y: u32,
+    #[serde(default)]
+    stickers: Vec<StickerConfig>,
+}
+
+fn default_bg_type() -> String { "color".to_string() }
+fn default_bg_color() -> String { "#000000".to_string() }
+fn default_color_active() -> String { "#FFCC00".to_string() }
+fn default_color_today() -> String { "#FFFFFF".to_string() }
+fn default_color_dim() -> String { "#787878".to_string() }
+fn default_start_y() -> u32 { 720 }
+
+impl Default for WallpaperSettings {
+    fn default() -> Self {
+        Self {
+            background_type: default_bg_type(),
+            background_color: default_bg_color(),
+            background_image: String::new(),
+            color_active: default_color_active(),
+            color_today: default_color_today(),
+            color_dim: default_color_dim(),
+            start_y: default_start_y(),
+            stickers: Vec::new(),
+        }
+    }
+}
+
+#[derive(Deserialize, Debug, Clone)]
 struct ClassInfo {
     subject: String,
     room: String,
     time: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, Clone)]
 struct DaySchedule {
     day: String,
     classes: Vec<ClassInfo>,
 }
 
+#[derive(Deserialize, Debug, Clone)]
+#[serde(untagged)]
+enum SchedulePayload {
+    WithSettings {
+        settings: WallpaperSettings,
+        schedule: Vec<DaySchedule>,
+    },
+    LegacyArray(Vec<DaySchedule>),
+}
+
 const HEIGHT: u32 = 2400;
 const WIDTH: u32 = 1080;
 
-// Fungsi bantuan untuk mengubah "10:00" menjadi total menit dari tengah malam (600)
+fn hex_to_rgba(hex: &str, fallback: Rgba<u8>) -> Rgba<u8> {
+    let clean = hex.trim_start_matches('#');
+    if clean.len() == 6 {
+        let r = u8::from_str_radix(&clean[0..2], 16).unwrap_or(fallback.0[0]);
+        let g = u8::from_str_radix(&clean[2..4], 16).unwrap_or(fallback.0[1]);
+        let b = u8::from_str_radix(&clean[4..6], 16).unwrap_or(fallback.0[2]);
+        return Rgba([r, g, b, 255]);
+    }
+    fallback
+}
+
 fn parse_time_to_minutes(time_str: &str) -> u32 {
     let parts: Vec<&str> = time_str.split(':').collect();
     if parts.len() == 2 {
@@ -31,7 +116,6 @@ fn parse_time_to_minutes(time_str: &str) -> u32 {
     0
 }
 
-// Fungsi untuk mengecek apakah waktu sekarang berada di dalam rentang jam kuliah
 fn is_current_class(time_range: &str, current_minutes: u32) -> bool {
     let parts: Vec<&str> = time_range.split(|c| c == '-' || c == '–').collect();
     if parts.len() == 2 {
@@ -43,43 +127,52 @@ fn is_current_class(time_range: &str, current_minutes: u32) -> bool {
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let json_data = fs::read_to_string("config/schedule.json").expect("Gagal membaca jadwal.json");
-    let schedule: Vec<DaySchedule> = serde_json::from_str(&json_data)?;
+    let config_path = if std::path::Path::new("config/schedule.json").exists() {
+        "config/schedule.json"
+    } else if std::path::Path::new("/data/adb/modules/schedule_wallpaper/system/etc/config/schedule.json").exists() {
+        "/data/adb/modules/schedule_wallpaper/system/etc/config/schedule.json"
+    } else {
+        "schedule.json"
+    };
+
+    let json_data = fs::read_to_string(config_path).unwrap_or_else(|_| "[]".to_string());
+    let payload: SchedulePayload = serde_json::from_str(&json_data).unwrap_or(SchedulePayload::LegacyArray(vec![]));
+
+    let (settings, schedule) = match payload {
+        SchedulePayload::WithSettings { settings, schedule } => (settings, schedule),
+        SchedulePayload::LegacyArray(schedule) => (WallpaperSettings::default(), schedule),
+    };
+
+    let bg_color = hex_to_rgba(&settings.background_color, Rgba([0, 0, 0, 255]));
+    let color_active = hex_to_rgba(&settings.color_active, Rgba([255, 204, 0, 255]));
+    let color_today = hex_to_rgba(&settings.color_today, Rgba([255, 255, 255, 255]));
+    let color_dim = hex_to_rgba(&settings.color_dim, Rgba([120, 120, 120, 255]));
 
     let config = Config::new(
         WIDTH,
         HEIGHT,
-        Rgba([0, 0, 0, 255]),
+        bg_color,
         Some(BLACK),
         "jadwal_kuliah.png",
         Some("./assets/GeistMono-Medium.ttf"),
     );
 
     let mut image = Image::new();
-
-    // Palet Warna
-    let color_white = Rgba([255, 255, 255, 255]);
-    let color_dim = Rgba([120, 120, 120, 255]); // Abu-abu untuk jadwal hari lain
-    let color_highlight = Rgba([255, 204, 0, 255]); // Kuning terang untuk kelas yang sedang berlangsung
-
     let mut components = Vec::new();
 
-    // Dapatkan waktu saat ini menggunakan chrono
     let now = Local::now();
-    let current_day = now.format("%A").to_string(); // Contoh: "Monday"
+    let current_day = now.format("%A").to_string();
     let current_minutes = now.hour() * 60 + now.minute();
 
-    // Posisi awal jadwal dimulai langsung dari Y: 720 (tanpa teks judul "PROGRAM")
-    let mut current_y = 720;
+    let mut current_y = settings.start_y;
 
     for daily in schedule {
         let day_upper = daily.day.to_uppercase();
         let day_str: &'static str = Box::leak(day_upper.into_boxed_str());
 
         let is_today = daily.day.eq_ignore_ascii_case(&current_day);
-        let header_color = if is_today { color_white } else { color_dim };
+        let header_color = if is_today { color_today } else { color_dim };
 
-        // Nama Hari
         components.push(Components::Text(
             150,
             current_y,
@@ -91,7 +184,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         current_y += 55;
 
         if daily.classes.is_empty() {
-            let free_color = if is_today { color_white } else { color_dim };
+            let free_color = if is_today { color_today } else { color_dim };
             components.push(Components::Text(
                 220,
                 current_y,
@@ -109,15 +202,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
                 let text_color = if is_today {
                     if is_current_class(time_str, current_minutes) {
-                        color_highlight
+                        color_active
                     } else {
-                        color_white
+                        color_today
                     }
                 } else {
                     color_dim
                 };
 
-                // Kolom 1: Mata Kuliah
                 components.push(Components::Text(
                     220,
                     current_y,
@@ -127,19 +219,32 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     None,
                 ));
 
-                // Kolom 2: Ruangan
                 components.push(Components::Text(
                     560, current_y, 32, room_str, text_color, None,
                 ));
 
-                // Kolom 3: Waktu
                 components.push(Components::Text(
                     840, current_y, 32, time_str, text_color, None,
                 ));
 
                 current_y += 42;
             }
-            current_y += 25; // Jarak antar hari
+            current_y += 25;
+        }
+    }
+
+    // Stickers Layer (Render text/emoji stickers)
+    for stk in settings.stickers {
+        if stk.r#type == "emoji" || stk.r#type == "text" {
+            let sticker_str: &'static str = Box::leak(stk.content.into_boxed_str());
+            components.push(Components::Text(
+                stk.x,
+                stk.y,
+                stk.size,
+                sticker_str,
+                color_today,
+                None,
+            ));
         }
     }
 
@@ -151,6 +256,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .add_components(component_refs)
         .draw()?;
 
-    println!("Gambar jadwal_kuliah.png berhasil di-render!");
+    println!("Gambar jadwal_kuliah.png berhasil di-render dari skema baru!");
     Ok(())
 }
