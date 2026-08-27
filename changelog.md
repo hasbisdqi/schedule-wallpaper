@@ -1,3 +1,10 @@
+# 0.3.1
+
+- Fix Web UI Responsiveness: Layout flex responsif untuk mobile dan tablet
+- Fix Schedule Rendering: Fallback jadwal default otomatis ter-load tanpa error
+- Drag & Drop Canvas: Stiker dan elemen dekorasi kini dapat digeser langsung di kanvas HP (Mouse & Touch)
+- Auto-save LocalStorage: Seluruh warna, background, dan stiker tersimpan otomatis dan persisten
+
 # 0.3.0
 
 - Menghapus teks judul "PROGRAM" agar tampilan wallpaper lebih bersih dan minimalis

@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Schedule Wallpaper Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -31,8 +31,8 @@
         }
 
         header {
-            padding: 1.25rem 2rem;
-            background: rgba(19, 27, 46, 0.85);
+            padding: 1rem 1.5rem;
+            background: rgba(19, 27, 46, 0.9);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -44,7 +44,7 @@
         }
 
         .brand-title {
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 700;
             background: linear-gradient(135deg, #f59e0b, #fbbf24);
             -webkit-background-clip: text;
@@ -56,14 +56,15 @@
 
         .header-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: var(--radius-md);
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             cursor: pointer;
             border: 1px solid transparent;
@@ -79,18 +80,32 @@
         .btn-secondary:hover { background: #263454; }
 
         .main-container {
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            gap: 2rem;
-            padding: 2rem;
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            padding: 1.5rem;
             max-width: 1440px;
             margin: 0 auto;
             width: 100%;
             flex: 1;
+            align-items: flex-start;
         }
 
-        @media (max-width: 1024px) {
-            .main-container { grid-template-columns: 1fr; }
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            .main-container {
+                flex-direction: column;
+                align-items: center;
+                padding: 1rem;
+            }
+            .preview-pane {
+                width: 100% !important;
+                max-width: 360px;
+            }
+            .controls-pane {
+                width: 100% !important;
+                max-height: none !important;
+            }
         }
 
         /* Tabs */
@@ -101,7 +116,7 @@
             padding: 5px;
             border-radius: var(--radius-md);
             border: 1px solid var(--border);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
         }
 
         .tab-btn {
@@ -135,44 +150,51 @@
             background: var(--bg-secondary);
             border-radius: var(--radius-lg);
             border: 1px solid var(--border);
-            padding: 2rem;
-            position: relative;
+            padding: 1.5rem;
+            position: sticky;
+            top: 5rem;
+            flex-shrink: 0;
         }
 
         .phone-mockup {
-            width: 320px;
-            height: 710px;
+            width: 290px;
+            height: 644px;
             background: #000;
-            border-radius: 44px;
-            box-shadow: 0 25px 60px -15px rgba(0,0,0,0.8), 0 0 0 10px #1e293b, 0 0 0 12px #334155;
+            border-radius: 40px;
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.8), 0 0 0 8px #1e293b, 0 0 0 10px #334155;
             position: relative;
             overflow: hidden;
             user-select: none;
+            touch-action: none;
         }
 
         .phone-notch {
             position: absolute;
-            top: 12px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            width: 90px;
-            height: 24px;
+            width: 80px;
+            height: 20px;
             background: #111;
-            border-radius: 20px;
+            border-radius: 16px;
             z-index: 20;
+            pointer-events: none;
         }
 
         #previewCanvas {
             width: 100%;
             height: 100%;
             display: block;
+            cursor: default;
         }
 
         .preview-controls {
-            margin-top: 1.25rem;
+            margin-top: 1rem;
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
+            width: 100%;
+            justify-content: space-between;
         }
 
         /* Right Side: Config Form */
@@ -183,14 +205,16 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            max-height: 800px;
+            flex: 1;
+            width: 100%;
+            max-height: 820px;
             overflow-y: auto;
         }
 
         .section-title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             color: #cbd5e1;
             display: flex;
             align-items: center;
@@ -198,7 +222,7 @@
         }
 
         .form-group {
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.1rem;
         }
 
         .form-label {
@@ -211,13 +235,13 @@
 
         .form-input, .form-select {
             width: 100%;
-            padding: 9px 12px;
+            padding: 8px 12px;
             background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             color: var(--text-primary);
             font-family: inherit;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             outline: none;
             transition: border-color 0.2s;
         }
@@ -230,6 +254,10 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .color-picker-grid { grid-template-columns: 1fr; }
         }
 
         .color-item {
@@ -270,14 +298,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            cursor: pointer;
             background: rgba(255,255,255,0.02);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .class-list {
-            padding: 10px 14px;
+            padding: 10px 12px;
             display: flex;
             flex-direction: column;
             gap: 8px;
@@ -286,9 +313,18 @@
 
         .class-row {
             display: grid;
-            grid-template-columns: 1fr 80px 95px 28px;
-            gap: 6px;
+            grid-template-columns: 1fr 75px 85px 26px;
+            gap: 5px;
             align-items: center;
+        }
+
+        @media (max-width: 480px) {
+            .class-row {
+                grid-template-columns: 1fr 1fr 26px;
+            }
+            .class-row input:first-child {
+                grid-column: span 2;
+            }
         }
 
         .class-row input {
@@ -298,6 +334,7 @@
             border: 1px solid var(--border);
             border-radius: 6px;
             color: #fff;
+            width: 100%;
         }
 
         .btn-icon-del {
@@ -316,20 +353,20 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .sticker-chip {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            font-size: 20px;
+            font-size: 22px;
             padding: 6px 12px;
             border-radius: var(--radius-md);
             cursor: pointer;
             transition: transform 0.15s;
         }
         .sticker-chip:hover {
-            transform: scale(1.2);
+            transform: scale(1.15);
             border-color: var(--accent);
         }
 
@@ -349,6 +386,21 @@
             border-radius: 6px;
             font-size: 0.85rem;
         }
+
+        .toast-msg {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10B981;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
@@ -358,7 +410,7 @@
             <span>📅</span> Schedule Wallpaper Studio
         </div>
         <div class="header-actions">
-            <button class="btn btn-secondary" onclick="loadScheduleFromDevice()">🔄 Reset / Reload</button>
+            <button class="btn btn-secondary" onclick="loadScheduleFromDevice()">🔄 Reset</button>
             <button class="btn btn-primary" onclick="saveScheduleToDevice()">💾 Simpan ke JSON</button>
         </div>
     </header>
@@ -371,28 +423,29 @@
                 <canvas id="previewCanvas" width="1080" height="2400"></canvas>
             </div>
             <div class="preview-controls">
-                <span style="font-size:0.85rem; color:var(--text-secondary)">Preview Mode:</span>
-                <select id="simDaySelect" class="form-select" style="width: auto;" onchange="renderPreview()">
-                    <option value="Monday">Senin (Monday)</option>
-                    <option value="Tuesday">Selasa (Tuesday)</option>
-                    <option value="Wednesday">Rabu (Wednesday)</option>
-                    <option value="Thursday">Kamis (Thursday)</option>
-                    <option value="Friday">Jumat (Friday)</option>
+                <span style="font-size:0.8rem; color:var(--text-secondary)">Simulasi Hari:</span>
+                <select id="simDaySelect" class="form-select" style="width: auto; padding: 4px 8px;" onchange="renderPreview()">
+                    <option value="Monday">Senin</option>
+                    <option value="Tuesday">Selasa</option>
+                    <option value="Wednesday">Rabu</option>
+                    <option value="Thursday">Kamis</option>
+                    <option value="Friday">Jumat</option>
                 </select>
             </div>
+            <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:8px;">💡 Tips: Geser/Drag stiker langsung di kanvas HP!</div>
         </div>
 
         <!-- Right: Control Panel Tabs -->
         <div class="controls-pane">
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab('tabSchedule')">Jadwal Kelas</button>
-                <button class="tab-btn" onclick="switchTab('tabTheme')">Tema & Warna</button>
-                <button class="tab-btn" onclick="switchTab('tabStickers')">Stiker & Elemen</button>
+                <button class="tab-btn active" onclick="switchTab('tabSchedule', this)">Jadwal Kelas</button>
+                <button class="tab-btn" onclick="switchTab('tabTheme', this)">Tema & Warna</button>
+                <button class="tab-btn" onclick="switchTab('tabStickers', this)">Stiker & Elemen</button>
             </div>
 
             <!-- TAB 1: SCHEDULE -->
             <div id="tabSchedule" class="tab-content active">
-                <div class="section-title">Daftar Jadwal Mingguan</div>
+                <div class="section-title">Daftar Jadwal Kuliah</div>
                 <div id="daysContainer"></div>
             </div>
 
@@ -403,7 +456,7 @@
                     <label class="form-label">Tipe Background</label>
                     <select id="bgTypeSelect" class="form-select" onchange="onBgTypeChange()">
                         <option value="color">Warna Solid (Tanpa Wallpaper)</option>
-                        <option value="image">Gambar Custom (URL / File)</option>
+                        <option value="image">Gambar Custom (URL / Upload Foto)</option>
                     </select>
                 </div>
 
@@ -417,14 +470,14 @@
 
                 <div id="bgImgGroup" class="form-group" style="display:none">
                     <label class="form-label">URL Gambar Background</label>
-                    <input type="text" id="bgImgInput" class="form-input" placeholder="https://... atau path gambar" oninput="updateSettings('background_image', this.value)">
-                    <input type="file" id="bgFileInput" accept="image/*" style="margin-top:8px" onchange="handleBgFileUpload(event)">
+                    <input type="text" id="bgImgInput" class="form-input" placeholder="https://... atau data image" oninput="updateSettings('background_image', this.value)">
+                    <input type="file" id="bgFileInput" accept="image/*" style="margin-top:8px;font-size:0.8rem;" onchange="handleBgFileUpload(event)">
                 </div>
 
                 <div class="section-title" style="margin-top:1.5rem">Skema Warna Teks</div>
                 <div class="color-picker-grid">
                     <div class="color-item">
-                        <span>Sedang Aktif (Highlight)</span>
+                        <span>Kelas Sedang Berlangsung</span>
                         <input type="color" id="colActiveInput" value="#FFCC00" onchange="updateSettings('color_active', this.value)">
                     </div>
                     <div class="color-item">
@@ -436,7 +489,7 @@
                         <input type="color" id="colDimInput" value="#787878" onchange="updateSettings('color_dim', this.value)">
                     </div>
                     <div class="color-item">
-                        <span>Posisi Mulai Y</span>
+                        <span>Posisi Mulai Y (Offset)</span>
                         <input type="number" id="startYInput" class="form-input" style="width:70px;padding:4px;" value="720" onchange="updateSettings('start_y', parseInt(this.value))">
                     </div>
                 </div>
@@ -445,7 +498,7 @@
             <!-- TAB 3: STICKERS & DECORATIONS -->
             <div id="tabStickers" class="tab-content">
                 <div class="section-title">Tambah Stiker & Badge</div>
-                <div class="form-label">Pilih Emoji Stiker Cepat:</div>
+                <div class="form-label">Klik untuk Tambah ke Layar:</div>
                 <div class="sticker-palette">
                     <span class="sticker-chip" onclick="addSticker('🎓')">🎓</span>
                     <span class="sticker-chip" onclick="addSticker('💻')">💻</span>
@@ -455,16 +508,21 @@
                     <span class="sticker-chip" onclick="addSticker('🔥')">🔥</span>
                     <span class="sticker-chip" onclick="addSticker('📚')">📚</span>
                     <span class="sticker-chip" onclick="addSticker('⭐')">⭐</span>
+                    <span class="sticker-chip" onclick="addSticker('🎯')">🎯</span>
+                    <span class="sticker-chip" onclick="addSticker('✨')">✨</span>
                 </div>
 
-                <div class="section-title" style="margin-top:1.5rem">Daftar Stiker Aktif (Klik kanvas untuk geser)</div>
+                <div class="section-title" style="margin-top:1.5rem">Daftar Stiker Aktif</div>
                 <div id="stickerListContainer" class="sticker-item-list"></div>
             </div>
         </div>
     </div>
 
+    <div id="toastMsg" class="toast-msg">Pengaturan berhasil disimpan!</div>
+
     <script>
-        let currentScheduleData = {
+        // Bundled Default Fallback Data (100% Works even offline)
+        const DEFAULT_DATA = {
             settings: {
                 background_type: "color",
                 background_color: "#000000",
@@ -473,18 +531,59 @@
                 color_today: "#FFFFFF",
                 color_dim: "#787878",
                 start_y: 720,
-                stickers: []
+                stickers: [
+                    { id: "stk_1", type: "emoji", content: "🎓", x: 860, y: 660, size: 64, rotation: 0 }
+                ]
             },
-            schedule: []
+            schedule: [
+                {
+                    day: "Monday",
+                    classes: [
+                        { subject: "Mobile", room: "Patt.I-3C", time: "10:00-11:45" },
+                        { subject: "Praktikum Mobile", room: "Lab Mobile", time: "13:00-15:00" }
+                    ]
+                },
+                {
+                    day: "Tuesday",
+                    classes: [
+                        { subject: "Praktikum MPTI", room: "Lab PPL", time: "08:00-10:00" },
+                        { subject: "IoT", room: "Patt.II-1A", time: "12:30-15:00" }
+                    ]
+                },
+                {
+                    day: "Wednesday",
+                    classes: [
+                        { subject: "MPTI", room: "Patt.II-3A", time: "10:00-11:45" },
+                        { subject: "DPP", room: "Patt.I-3A", time: "12:30-15:00" },
+                        { subject: "EtProf TI", room: "Patt.III-3A", time: "15:00-16:45" }
+                    ]
+                },
+                {
+                    day: "Thursday",
+                    classes: [
+                        { subject: "MHP (CRM)", room: "Patt.II-3C", time: "07:30-09:15" },
+                        { subject: "Audit TI", room: "Patt.II-3D", time: "10:00-12:30" },
+                        { subject: "Belneg Wimaya", room: "Patt.I-1A", time: "12:30-14:15" },
+                        { subject: "UKPL", room: "Patt.II-1A", time: "15:00-16:45" }
+                    ]
+                },
+                {
+                    day: "Friday",
+                    classes: []
+                }
+            ]
         };
 
+        let currentScheduleData = JSON.parse(JSON.stringify(DEFAULT_DATA));
         let bgImageObj = null;
+        let draggingSticker = null;
+        let dragOffset = { x: 0, y: 0 };
 
-        function switchTab(tabId) {
+        function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             
-            event.target.classList.add('active');
+            btn.classList.add('active');
             document.getElementById(tabId).classList.add('active');
         }
 
@@ -494,6 +593,7 @@
             document.getElementById('bgColorGroup').style.display = val === 'color' ? 'block' : 'none';
             document.getElementById('bgImgGroup').style.display = val === 'image' ? 'block' : 'none';
             renderPreview();
+            saveToLocalStorage();
         }
 
         function updateSettings(key, val) {
@@ -506,6 +606,7 @@
             } else {
                 renderPreview();
             }
+            saveToLocalStorage();
         }
 
         function handleBgFileUpload(event) {
@@ -515,10 +616,11 @@
                 reader.onload = function(e) {
                     const dataUrl = e.target.result;
                     currentScheduleData.settings.background_image = dataUrl;
-                    document.getElementById('bgImgInput').value = dataUrl.substring(0, 40) + '...';
+                    document.getElementById('bgImgInput').value = dataUrl.substring(0, 35) + '...';
                     bgImageObj = new Image();
                     bgImageObj.src = dataUrl;
                     bgImageObj.onload = () => renderPreview();
+                    saveToLocalStorage();
                 };
                 reader.readAsDataURL(file);
             }
@@ -530,19 +632,21 @@
                 type: 'emoji',
                 content: emoji,
                 x: 820,
-                y: 650 + (currentScheduleData.settings.stickers.length * 70),
-                size: 60,
+                y: 650 + ((currentScheduleData.settings.stickers.length % 5) * 80),
+                size: 64,
                 rotation: 0
             };
             currentScheduleData.settings.stickers.push(newSticker);
             renderStickerList();
             renderPreview();
+            saveToLocalStorage();
         }
 
         function removeSticker(id) {
             currentScheduleData.settings.stickers = currentScheduleData.settings.stickers.filter(s => s.id !== id);
             renderStickerList();
             renderPreview();
+            saveToLocalStorage();
         }
 
         function renderStickerList() {
@@ -551,15 +655,15 @@
             container.innerHTML = '';
             
             if (currentScheduleData.settings.stickers.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.8rem">Belum ada stiker ditambahkan.</div>';
+                container.innerHTML = '<div style="color:var(--text-secondary);font-size:0.8rem">Belum ada stiker di layar.</div>';
                 return;
             }
 
-            currentScheduleData.settings.stickers.forEach((stk, i) => {
+            currentScheduleData.settings.stickers.forEach((stk) => {
                 const row = document.createElement('div');
                 row.className = 'sticker-list-row';
                 row.innerHTML = `
-                    <span>${stk.content} (Posisi X: ${stk.x}, Y: ${stk.y})</span>
+                    <span>${stk.content} (Posisi X: ${Math.round(stk.x)}, Y: ${Math.round(stk.y)})</span>
                     <button class="btn-icon-del" onclick="removeSticker('${stk.id}')">✕</button>
                 `;
                 container.appendChild(row);
@@ -568,6 +672,7 @@
 
         function renderScheduleForms() {
             const container = document.getElementById('daysContainer');
+            if (!container) return;
             container.innerHTML = '';
 
             currentScheduleData.schedule.forEach((dayGroup, dayIdx) => {
@@ -593,7 +698,7 @@
                         row.innerHTML = `
                             <input type="text" value="${cls.subject}" placeholder="Matkul" onchange="updateClass(${dayIdx}, ${clsIdx}, 'subject', this.value)">
                             <input type="text" value="${cls.room}" placeholder="Ruang" onchange="updateClass(${dayIdx}, ${clsIdx}, 'room', this.value)">
-                            <input type="text" value="${cls.time}" placeholder="Jam (10:00-11:45)" onchange="updateClass(${dayIdx}, ${clsIdx}, 'time', this.value)">
+                            <input type="text" value="${cls.time}" placeholder="Jam" onchange="updateClass(${dayIdx}, ${clsIdx}, 'time', this.value)">
                             <button class="btn-icon-del" onclick="deleteClass(${dayIdx}, ${clsIdx})">✕</button>
                         `;
                         list.appendChild(row);
@@ -609,12 +714,14 @@
         function updateClass(dayIdx, clsIdx, field, val) {
             currentScheduleData.schedule[dayIdx].classes[clsIdx][field] = val;
             renderPreview();
+            saveToLocalStorage();
         }
 
         function deleteClass(dayIdx, clsIdx) {
             currentScheduleData.schedule[dayIdx].classes.splice(clsIdx, 1);
             renderScheduleForms();
             renderPreview();
+            saveToLocalStorage();
         }
 
         function addClass(dayName) {
@@ -623,11 +730,13 @@
                 dayObj.classes.push({ subject: "Matkul Baru", room: "Ruang", time: "08:00-10:00" });
                 renderScheduleForms();
                 renderPreview();
+                saveToLocalStorage();
             }
         }
 
         function renderPreview() {
             const canvas = document.getElementById('previewCanvas');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
             const simDay = document.getElementById('simDaySelect').value;
             const settings = currentScheduleData.settings;
@@ -635,7 +744,6 @@
             // 1. Draw Background
             if (settings.background_type === 'image' && bgImageObj && bgImageObj.complete) {
                 ctx.drawImage(bgImageObj, 0, 0, canvas.width, canvas.height);
-                // Subtle dark overlay to keep text legible
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             } else {
@@ -651,7 +759,7 @@
                 const isToday = daily.day.toLowerCase() === simDay.toLowerCase();
                 const dayHeaderColor = isToday ? (settings.color_today || '#FFFFFF') : (settings.color_dim || '#787878');
 
-                // Nama Hari
+                // Day Header
                 ctx.font = "bold 42px 'JetBrains Mono', monospace";
                 ctx.fillStyle = dayHeaderColor;
                 ctx.textAlign = "left";
@@ -682,31 +790,120 @@
             if (settings.stickers) {
                 settings.stickers.forEach(stk => {
                     if (stk.type === 'emoji') {
-                        ctx.font = `${stk.size || 60}px sans-serif`;
+                        ctx.font = `${stk.size || 64}px sans-serif`;
                         ctx.textAlign = "center";
                         ctx.textBaseline = "middle";
                         ctx.fillText(stk.content, stk.x, stk.y);
+
+                        // Highlight if dragged
+                        if (draggingSticker && draggingSticker.id === stk.id) {
+                            ctx.strokeStyle = '#f59e0b';
+                            ctx.lineWidth = 4;
+                            ctx.strokeRect(stk.x - 40, stk.y - 40, 80, 80);
+                        }
                     }
                 });
             }
         }
 
-        async function loadScheduleFromDevice() {
-            try {
-                // Try fetch from local config
-                const res = await fetch('/system/etc/config/schedule.json');
-                const data = await res.json();
+        // --- CANVAS INTERACTIVE DRAG & DROP ---
+        function setupCanvasDrag() {
+            const canvas = document.getElementById('previewCanvas');
+            if (!canvas) return;
+
+            function getCanvasCoords(e) {
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                const clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+                const clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+                return {
+                    x: (clientX - rect.left) * scaleX,
+                    y: (clientY - rect.top) * scaleY
+                };
+            }
+
+            function onStart(e) {
+                const pos = getCanvasCoords(e);
+                const stickers = currentScheduleData.settings.stickers || [];
                 
-                if (Array.isArray(data)) {
-                    currentScheduleData.schedule = data;
-                } else {
-                    currentScheduleData = data;
+                // Find clicked sticker (reverse for top-most)
+                for (let i = stickers.length - 1; i >= 0; i--) {
+                    const stk = stickers[i];
+                    const dist = Math.hypot(pos.x - stk.x, pos.y - stk.y);
+                    if (dist <= 60) {
+                        draggingSticker = stk;
+                        dragOffset = { x: pos.x - stk.x, y: pos.y - stk.y };
+                        canvas.style.cursor = 'grabbing';
+                        renderPreview();
+                        e.preventDefault();
+                        break;
+                    }
                 }
-            } catch (e) {
-                console.log('Loading default config fallback');
+            }
+
+            function onMove(e) {
+                if (draggingSticker) {
+                    const pos = getCanvasCoords(e);
+                    draggingSticker.x = Math.max(50, Math.min(1030, pos.x - dragOffset.x));
+                    draggingSticker.y = Math.max(50, Math.min(2350, pos.y - dragOffset.y));
+                    renderPreview();
+                    e.preventDefault();
+                } else {
+                    const pos = getCanvasCoords(e);
+                    const stickers = currentScheduleData.settings.stickers || [];
+                    const isHover = stickers.some(s => Math.hypot(pos.x - s.x, pos.y - s.y) <= 60);
+                    canvas.style.cursor = isHover ? 'grab' : 'default';
+                }
+            }
+
+            function onEnd() {
+                if (draggingSticker) {
+                    draggingSticker = null;
+                    canvas.style.cursor = 'default';
+                    renderStickerList();
+                    renderPreview();
+                    saveToLocalStorage();
+                }
+            }
+
+            canvas.addEventListener('mousedown', onStart);
+            window.addEventListener('mousemove', onMove);
+            window.addEventListener('mouseup', onEnd);
+
+            canvas.addEventListener('touchstart', onStart, { passive: false });
+            window.addEventListener('touchmove', onMove, { passive: false });
+            window.addEventListener('touchend', onEnd);
+        }
+
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('schedule_wallpaper_studio_data', JSON.stringify(currentScheduleData));
+            } catch(e) {}
+        }
+
+        async function loadScheduleFromDevice() {
+            // 1. Try from localStorage first
+            const localSaved = localStorage.getItem('schedule_wallpaper_studio_data');
+            if (localSaved) {
+                try {
+                    currentScheduleData = JSON.parse(localSaved);
+                } catch(e) {}
+            } else {
+                try {
+                    const res = await fetch('/system/etc/config/schedule.json');
+                    const data = await res.json();
+                    if (Array.isArray(data)) {
+                        currentScheduleData.schedule = data;
+                    } else if (data && data.schedule) {
+                        currentScheduleData = data;
+                    }
+                } catch(e) {
+                    currentScheduleData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                }
             }
             
-            // Sync controls
+            // Sync form controls
             if (currentScheduleData.settings) {
                 document.getElementById('bgTypeSelect').value = currentScheduleData.settings.background_type || 'color';
                 document.getElementById('bgColorInput').value = currentScheduleData.settings.background_color || '#000000';
@@ -723,6 +920,7 @@
         }
 
         function saveScheduleToDevice() {
+            saveToLocalStorage();
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentScheduleData, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
@@ -730,11 +928,17 @@
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-            alert("Konfigurasi schedule.json berhasil diunduh!");
+
+            const toast = document.getElementById('toastMsg');
+            if (toast) {
+                toast.style.display = 'block';
+                setTimeout(() => toast.style.display = 'none', 3000);
+            }
         }
 
         window.onload = () => {
             loadScheduleFromDevice();
+            setupCanvasDrag();
         };
     </script>
 </body>
