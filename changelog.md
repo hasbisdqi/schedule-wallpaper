@@ -1,3 +1,9 @@
+# 0.3.3
+
+- Fix Wallpaper Apply: Kompilasi ulang SetWallpaper.jar otomatis di CI/CD dengan dukungan target FLAG_SYSTEM & FLAG_LOCK
+- Multi-UID Fallback: Mendukung eksekusi wallpaper setter via UID 1000 (System) dan UID 2000 (Shell) untuk mengatasi permission denied
+- Fix Permission & Directories: Membuat otomatis direktori /data/local/tmp dan /sdcard/Pictures saat render
+
 # 0.3.2
 
 - Impeccable Design Upgrade: Tampilan UI studio dirombak total dengan palet gelap modern, glassmorphism, dan Plus Jakarta Sans

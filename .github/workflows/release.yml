@@ -17,6 +17,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Java Toolchain & Android SDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Compile SetWallpaper.java to Android Dex Jar
+        run: |
+          mkdir -p build_java
+          javac -source 8 -target 8 -cp "$ANDROID_HOME/platforms/android-34/android.jar" schedule-wallpaper/SetWallpaper.java -d build_java
+          $ANDROID_HOME/build-tools/34.0.0/d8 --output build_java/classes.dex build_java/*.class
+          cd build_java
+          jar -cvf ../schedule-wallpaper/system/bin/SetWallpaper.jar classes.dex
+          cd ..
+          rm -rf build_java
+
       - name: Setup Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
@@ -32,6 +48,8 @@ jobs:
         run: |
           cp target/aarch64-linux-android/release/schedule-wallpaper schedule-wallpaper/system/bin/schedule-wallpaper
           chmod +x schedule-wallpaper/system/bin/schedule-wallpaper
+          chmod +x schedule-wallpaper/action.sh
+          chmod +x schedule-wallpaper/service.sh
           cd schedule-wallpaper
           zip -r ../Schedule-Wallpaper-${{ github.ref_name }}.zip ./*
           cd ..

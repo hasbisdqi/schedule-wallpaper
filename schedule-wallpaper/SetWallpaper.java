@@ -35,8 +35,13 @@ public class SetWallpaper {
             Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
             if (bitmap != null) {
-                // 5. Menerapkan gambar ke background layar
-                wallpaperManager.setBitmap(bitmap);
+                // 5. Menerapkan gambar ke background layar (Lockscreen + Homescreen)
+                try {
+                    // FLAG_SYSTEM (1) | FLAG_LOCK (2) = 3
+                    wallpaperManager.setBitmap(bitmap, null, true, WallpaperManager.FLAG_SYSTEM | WallpaperManager.FLAG_LOCK);
+                } catch (NoSuchMethodError | Exception ex) {
+                    wallpaperManager.setBitmap(bitmap);
+                }
                 System.out.println("Sukses! Wallpaper berhasil diubah di latar belakang.");
             } else {
                 System.err.println("Gagal! File gambar tidak ditemukan atau rusak.");
